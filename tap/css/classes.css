@@ -1,0 +1,94 @@
+.container {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
+
+.text-left {
+	text-align: left;
+}
+
+.hidden {
+	display: none;
+}
+
+sup {
+	position: relative;
+	font-size: xx-small;
+}
+
+u, .u {
+	text-decoration: underline;
+}
+
+#title, #rights, #commands, #slogan {
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	overflow: visible;
+}
+
+#title, #rights {
+	margin-left: -245px;
+	width: 200px;
+}
+
+#title {
+	margin-top: 75px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#rights {
+	margin-top: 89px;
+	font-size: 11px;
+}
+
+#commands, #slogan {
+	line-height: 25px;
+	width: 640px;
+	margin-left: -320px;
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+#slogan {
+	font-weight: bold;
+	font-size: 16px;
+	margin-top: 120px;
+}
+
+#commands {
+	margin-top: 135px;
+	font-size: 12px;
+}
+
+#commands div {
+	display: inline-block;
+	padding: 3px;
+}
+
+#commands, #commands * {
+	cursor: pointer;
+}
+
+#commands :hover, #commands * :hover {
+	text-decoration: underline;
+}
+
+#mode {
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	line-height: 15px;
+	font-size: 10px;
+	text-align: left;
+	text-transform: uppercase;
+	margin-top: 69px;
+	margin-left: 172px;
+}

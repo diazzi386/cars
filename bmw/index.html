@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+	<head>
+		<title>_</title>
+		<meta http-equiv="Cache-control" content="no-cache"/>
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="-1">
+        <meta charset="utf-8"/>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="css/general.css"/>
+		<link rel="stylesheet" type="text/css" href="css/canvas.css"/>
+		<link rel="stylesheet" type="text/css" href="css/classes.css"/>
+		<link rel="stylesheet" type="text/css" href="css/tabs.css"/>
+		<link rel="stylesheet" type="text/css" href="css/touch.css"/>
+		<link rel="shortcut icon" href="img/favicon.ico">
+		<meta name="theme-color" content="#000000"/>
+	</head>
+
+	<body>
+        <div class="container" style="font-family: 'Inter', sans-serif;">
+            <canvas id="init" class='main' width="640" height="320"></canvas>
+            <canvas id="realtime" class='main' width="640" height="320"></canvas>
+
+			<div class="tab" id="cars"></div>
+			<div class="tab" id="data"></div>
+			<div class="tab" id="help"></div>
+			<div class="tab" id='shop'></div>
+		</div>
+		
+		<!-- SCRIPTS -->
+
+		<script type="text/javascript" src="../core/io/main.js"></script>
+		<script type="text/javascript" src="../core/io/ui.js"></script>
+		<script type="text/javascript" src="../core/io/time.js"></script>
+		<script type="text/javascript" src="../core/io/data.js"></script>
+		<script type="text/javascript" src="../core/io/info.js"></script>
+        <script type="text/javascript" src="../core/io/commands.js"></script>
+		<script type="text/javascript" src="../core/io/sound.js"></script>
+
+		<script type="text/javascript" src="../core/model/physics.js"></script>
+		<script type="text/javascript" src="../core/model/pedals.js"></script>
+		<script type="text/javascript" src="../core/model/engine.js"></script>
+		<script type="text/javascript" src="../core/model/clutch.js"></script>
+		<script type="text/javascript" src="../core/model/transmission.js"></script>
+		<script type="text/javascript" src="../core/model/tires.js"></script>
+
+		<script type="text/javascript" src="./js/cluster.js"></script>
+		<script type="text/javascript" src="../cars/cars.js"></script>
+	</body>
+</html>
