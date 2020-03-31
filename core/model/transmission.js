@@ -167,7 +167,7 @@ var transmission = {
 				return 0;
 			else if (pedals.target.throttle && transmission.gear == 1)
 				return 0;
-			else if (pedals.target.throttle && transmission.gear > 1) {
+			else if (pedals.target.throttle && transmission.gear > 2) {
 				if (pedals.throttle == 1) {
 					if (diesel)
 						return 2000;

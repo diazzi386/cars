@@ -65,11 +65,6 @@ var physics = {
 
 		Fr = Math.sign(v) * Math.abs(Fr);
 
-		if (Math.abs(v) < 0.1 && a < 0) {
-			Fr = 0;
-			v = 0;
-		}
-
 		Tm = engine.torque();
 		
 		if (!clutch.engaged) {
@@ -90,7 +85,7 @@ var physics = {
 				Tf = 1.2 * clutch.clutch * car.engine.Tmax * Math.sign(Wd);
 			
 			if (transmission.gear != 0) {
-				Tf = Math.min(Tf, (Fl + Fr)*r*tau);
+				/* Tf = Math.min(Tf, (Fl + Fr)*r*tau); */
 				// Tm = Math.min(Tm, 1.2 * (Fl + Fr)*r*tau);
 			}
 			am = (Tm - Tf) / Jm;
@@ -148,7 +143,7 @@ var road = {
 };
 
 var COMPILED = {
-	DATE: "Mar. 26 2020",
-	VER: "0.3.28",
+	DATE: "Mar. 31 2020",
+	VER: "0.3.30",
 	CHANGELOG: "Physics, UI, new cars"
 }

@@ -373,9 +373,12 @@ ui.cluster = {
 			letter = "R";
 		else if (transmission.gear == 0)
 			letter = "N";
-		else if (transmission.automatic)
-			letter = "D" + transmission.name();
-		else if (!transmission.automatic)
+		else if (transmission.automatic) {
+			if (pedals.target.throttle > 0.8 || pedals.target.brake > 0.8)
+				letter = "S" + transmission.name();
+			else
+				letter = "D" + transmission.name();
+		} else if (!transmission.automatic)
 			letter = "M" + transmission.name();
 
 		context.fillText(letter, w / 2 + DATA.GEAR.X, h / 2 + DATA.GEAR.Y);			
