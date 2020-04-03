@@ -2,7 +2,9 @@ var clutch = {
 	clutch: 0,
 	target: 0,
 	engaged: false,
-	press: function () {
+	inertia: function () {
+		return 1.3 - pedals.target.throttle;
+	}, press: function () {
 		clutch.target = 0;
 		clutch.clutch = 0;
 		clutch.engaged = false;
@@ -14,12 +16,10 @@ var clutch = {
 			return clutch.clutch = 1;
 
 		var dt = time.dt;
-		var J = 1.3 - pedals.target.throttle;
+		var J = clutch.inertia();
 
-		if (transmission.direction.includes("+S")) {
-			clutch.clutch = (engine.rpm - 1000)/(car.engine.fuel == "D" ? 1500 : 2500) * pedals.throttle;
-			// clutch.target  = 1;
-		}
+		if (transmission.direction.includes("+S"))
+			clutch.start();
 			
 		clutch.clutch = clutch.clutch + Math.sign(clutch.target - clutch.clutch) * dt / J;
 		
@@ -27,5 +27,7 @@ var clutch = {
 		clutch.clutch = Math.max(clutch.clutch, 0);
 
 		return clutch.clutch;
+	}, start: function () {
+		clutch.clutch = (engine.rpm - 1000)/(car.engine.fuel == "D" ? 1500 : 2500) * pedals.throttle;
 	}
 };

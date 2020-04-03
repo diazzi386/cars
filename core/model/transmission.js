@@ -7,7 +7,82 @@ var transmission = {
 	launch: false,
 	busy: false,
 	promise: null,
-	name: function (g) {
+	tables: {
+		start: function () {
+			var diesel = (info.engine.fuel() == 'Diesel');
+			var max = car.engine.rpm[car.engine.rpm.length-1];
+			if (!transmission.launch)
+				return 0;
+			else {
+				if (diesel)
+					return 2500;
+				else {
+					if (max > 7000)
+						return 5000;
+					else
+						return 4000;
+				}
+			}
+		}, up: function () {
+			var diesel = (info.engine.fuel() == 'Diesel');
+			var max = car.engine.rpm[car.engine.rpm.length-1];
+			if (diesel && max > 5200)
+				table = [3000, 3000, 4000, 5200];
+			else if (diesel)
+				table = [3000, 3000, 4000, 4800];
+			else if (max > 7000)
+				table = [4000, 5000, 6000, max - 300];
+			else
+				table = [3000, 4000, 5000, max - 300];
+
+			var index = 0;
+
+			if (pedals.target.throttle == 1)
+				index = 3;
+			else if (pedals.target.throttle >= 0.8)
+				index = 2;
+			else if (pedals.target.throttle >= 0.5)
+				index = 1;
+			else
+				index = 0;
+
+			return table[index];
+		}, kickdown: function () {
+			var diesel = (info.engine.fuel() == 'Diesel');
+			var max = car.engine.rpm[car.engine.rpm.length-1];
+			if (pedals.throttle == 1) {
+				if (diesel)
+					return 2000;
+				else if (max > 7000)
+					return 4000;
+				else
+					return 3000;
+			} else
+				return 0;
+			// if (transmission.gear == 1 && !pedals.brake && pedals.input.throttle && transmission.direction.includes("+S"))
+			//	return 0;
+		}, down: function () {
+			var diesel = (info.engine.fuel() == 'Diesel');
+			var max = car.engine.rpm[car.engine.rpm.length-1];
+			if (diesel)
+				table = [1500, 1500, 2000, 2500];
+			else if (max > 7000)
+				table = [2000, 2500, 3000, 3500];
+			else
+				table = [2500, 3000, 3500, 4000];
+
+			if (pedals.brake == 1)
+				index = 3;
+			else if (pedals.brake >= 0.8)
+				index = 2;
+			else if (pedals.brake >= 0.5)
+				index = 1;
+			else
+				index = 0;
+
+			return table[index];
+		}
+	}, name: function (g) {
 		g = g || transmission.gear;
 		// if (g == 0 && transmission.park) return 'P'; else
 		if (g == 0) return 'N';
@@ -52,35 +127,22 @@ var transmission = {
 			transmission.gear = 1;
 		} else if (g >= 1 && g <= car.transmission.gears.length) {
 			transmission.busy = true;
-			var t = 100;
+			var t = car.transmission.gears.length >= 8 ? 100 : 100;
 			var T = transmission.time();
 			transmission.direction = Math.abs(g) + (transmission.gear < g ? "+" : "-") + (transmission.gear == 0 ? "S" : "");
 			
-			
-			if ((car.transmission.desc == "D" || car.transmission.gears.length == 8) && pedals.target.throttle == 1) {
-				pedals.throttle = 0.75;
-				// engine.cutoff();
-				clutch.target = 1;
-				clutch.clutch = 1;
-				clutch.engaged = false;
+			pedals.wait.throttle = true;
+			setTimeout(function () {
+				clutch.press();
+			}, t);
+			setTimeout(function (g) {
 				transmission.gear = g;
+			}, t, g);
+			transmission.promise = setTimeout(clutch.release, T - t);
+			setTimeout(function () {
+				pedals.wait.throttle = false;
 				transmission.busy = false;
-				// pedals.wait.throttle = false;
-			} else {
-				// if (car.transmission.desc != "A")
-					pedals.wait.throttle = true;
-				// setTimeout(function () {
-					clutch.press();
-				// }, t);
-				// setTimeout(function (g) {
-					transmission.gear = g;
-				// }, t, g);
-				transmission.promise = setTimeout(clutch.release, T - t);
-				setTimeout(function () {
-					pedals.wait.throttle = false;
-					transmission.busy = false;
-				}, T);
-			}
+			}, T);
 		}
 	}, upshift: function () {
 		if (transmission.automatic)
@@ -127,40 +189,9 @@ var transmission = {
 			return zero;
 		else if (m == '+') {
 			if (transmission.gear == 0) {
-				if (!transmission.launch)
-					return 0;
-				else {
-					if (diesel)
-						return 3000;
-					else {
-						if (max > 7000)
-							return 5000;
-						else
-							return 4000;
-					}
-				}			
+				return transmission.tables.start();			
 			} else {
-				if (diesel && max > 5200)
-					table = [3000, 3000, 4000, 5200];
-				else if (diesel)
-					table = [3000, 3000, 4000, 4800];
-				else if (max > 7000)
-					table = [4000, 5000, 6000, max - 300];
-				else
-					table = [3000, 4000, 5000, max - 300];
-
-				var index = 0;
-
-				if (pedals.target.throttle == 1)
-					index = 3;
-				else if (pedals.target.throttle >= 0.8)
-					index = 2;
-				else if (pedals.target.throttle >= 0.5)
-					index = 1;
-				else
-					index = 0;
-
-				return table[index];
+				return transmission.tables.up();
 			}
 		} else if (m == '-') {
 			if (transmission.gear == 0)
@@ -168,43 +199,26 @@ var transmission = {
 			else if (pedals.target.throttle && transmission.gear == 1)
 				return 0;
 			else if (pedals.target.throttle && transmission.gear > 2) {
-				if (pedals.throttle == 1) {
-					if (diesel)
-						return 2000;
-					else if (max > 7000)
-						return 4000;
-					else
-						return 3000;
-				} else
-					return 0;
-				// if (transmission.gear == 1 && !pedals.brake && pedals.input.throttle && transmission.direction.includes("+S"))
-				//	return 0;
+				return transmission.tables.kickdown();
 			} else if (!pedals.target.throttle) {
-				if (diesel)
-					table = [1500, 1500, 2000, 2500];
-				else if (max > 7000)
-					table = [2000, 2500, 3000, 3500];
-				else
-					table = [2500, 3000, 3500, 4000];
-
-				if (pedals.brake == 1)
-					index = 3;
-				else if (pedals.brake >= 0.8)
-					index = 2;
-				else if (pedals.brake >= 0.5)
-					index = 1;
-				else
-					index = 0;
-
-				return table[index];	
+				return transmission.tables.down();	
 			} else
 				return 0;
 		}
 	}, time: function () {
-		t = 0.50; // 0.8, 1.2, 1.5
+		// t = 0.50; // 0.8, 1.2, 1.5
+		if (car.transmission.gears.length >= 8 || car.transmission.desc == "D")
+			t = 0.25;
+		else
+			t = 0.50;
+
+		t = t + (new Date().getFullYear() - car.general.year)/10*0.1;
+		if (car.transmission.desc == "S")
+			t = t + 0.1;
 		return t * 1000;
 	}, toggle: function () {
 		transmission.automatic = !transmission.automatic;
+		localStorage.setItem("diazzi-cars-transmission", transmission.automatic);
 	}, init: function () {
 		car.transmission = {
 			traction: (car.TRANSMISSION.split(" "))[0],
@@ -239,5 +253,12 @@ var transmission = {
 			vehicle.geometry.center = 0.60;
 		else
 			vehicle.geometry.center = 0.50;
+
+		if (localStorage.getItem("diazzi-cars-transmission")) {
+			if (localStorage.getItem("diazzi-cars-transmission") == "true")
+				transmission.automatic = true;
+			else
+				transmission.automatic = false;
+		}
 	}
 };

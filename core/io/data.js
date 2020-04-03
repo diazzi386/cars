@@ -1,10 +1,10 @@
 var data = {
 	redirect: function () {
-		if (localStorage.getItem("lastCar")) {
-			var location = localStorage.getItem("lastCar");
+		if (localStorage.getItem(savingName + "-last")) {
+			var location = localStorage.getItem(savingName + "-last");
 
 			if (location.split('/').length < 4)
-				return window.location.replace("?BMW/3-Series/2010/320d");
+				return window.location.replace("?" + defaultCar);
 
 			brand = location.split('/')[0].replace(/_/g, " ");
 			serie = location.split('/')[1];
@@ -14,7 +14,7 @@ var data = {
 			if (cars[brand] && cars[brand][serie] && cars[brand][serie][model])
 				return window.location.replace("?" + location);
 		}
-		return window.location.replace("?BMW/3-Series/2010/320d");
+		return window.location.replace("?" + defaultCar);
 	}, init: function () {
 		if (!window.location.href.includes("?"))
 			return data.redirect();
@@ -30,7 +30,7 @@ var data = {
 		else
 			return data.redirect();
 		
-		localStorage.setItem("lastCar", location);
+		localStorage.setItem(savingName + "-last", location);
 
 		car = data.parse(car);
 

@@ -3,6 +3,7 @@ var engine = {
 	rpm: 0,
 	airflow: 0,
 	startup: true,
+	startupRegime: 1200,
 	injection: 1,
 	mu: 0.85,
 	interpolateTorque: function (rpm) {
@@ -35,9 +36,7 @@ var engine = {
 		var l = 0.5;
 		var dt = time.dt;
 
-		var Ja = car.engine.fuel == "D" ? 2.0 : 1.0;
-
-		engine.airflow = engine.airflow + Math.sign((engine.startup ? 0.6 : pedals.throttle) - engine.airflow) * dt / Ja;
+		engine.airflow = engine.airflow + Math.sign((engine.startup ? 0.6 : pedals.throttle) - engine.airflow) * dt / engine.inertia();
 		engine.airflow = Math.max(0, engine.airflow);
 		engine.airflow = Math.min(1, engine.airflow);
 
@@ -46,10 +45,13 @@ var engine = {
 		else if (transmission.gear == 0 && engine.rpm >= transmission.regime('+') && transmission.launch && pedals.brake)
 			engine.cutoff();
 		
-		if (engine.startup && engine.rpm >= 1200)
+		if (engine.startup && engine.rpm >= engine.startupRegime)
 			engine.startup = false;
 		
 		t = engine.airflow * engine.injection * (engine.startup ? 0.6 : pedals.throttle);
+
+		if (vehicle.speed > car.transmission.limit / 3.6)
+			t *= 1 - (vehicle.speed - car.transmission.limit / 3.6) / 2;
 		
 		var b = t * (1 + l) - l / (1 - n) * (x - n);
 		return engine.mu * Math.min(b, 1) * T;
@@ -132,5 +134,10 @@ var engine = {
 		engine.max = RPM[5];
 
 		car.engine.J = car.engine.Tmax / 100 * 0.10 * (car.engine.fuel == "D" ? 1.3 : 1.0);
+	}, inertia: function () {
+		var i = 1.0;
+		i *= car.engine.fuel == "D" ? 2.0 : 1.0;
+		i = i * (1 + (new Date().getFullYear() - car.general.year)/10*0.1);
+		return i;
 	}
 };

@@ -68,29 +68,40 @@ var physics = {
 		Tm = engine.torque();
 		
 		if (!clutch.engaged) {
-			if (car.transmission.desc == "M")
-				Tf = 1.2 * clutch.clutch * car.engine.Tmax * Math.sign(Wd);
-			else if (car.transmission.desc == "A") {		
-				Tf = 1.0 * clutch.clutch * car.engine.Tmax * Math.sign(Wd);
-				/*
-				if (transmission.gear == 0)
-					Tf = 0;
-				else {
-					Wr = v / r / tau;
-					console.log(Wr / Wm);
-					Tf = Math.abs(0.9 * Tm * (2 - 1 * Wr / Wm));
-				}
-				*/
-			} else
-				Tf = 1.2 * clutch.clutch * car.engine.Tmax * Math.sign(Wd);
+			
+			Tf = clutch.clutch * car.engine.Tmax * Math.sign(Wd);
+
+			if (car.transmission.desc != "A")
+				Tf = Tf * 1.2;
 			
 			if (transmission.gear != 0) {
-				/* Tf = Math.min(Tf, (Fl + Fr)*r*tau); */
+				Tf = Math.min(Tf, (Fl + Fr)*r*Math.abs(tau));
 				// Tm = Math.min(Tm, 1.2 * (Fl + Fr)*r*tau);
 			}
-			am = (Tm - Tf) / Jm;
-			// Fm = Math.min(Tf / r / tau, Fl + Fr);
+
 			Fm = Tf / r / tau;
+			
+			/*
+
+			if (transmission.gear == 0) {
+				Tf = 0;
+				eff = 0;
+				TR = 0;
+				Fm = 0;
+			} else {
+				var SR = Wr / Wm;
+				var CF = 0.0009 * (1 - SR * SR * SR);
+				var TR = 2 - SR;
+				var eff = 0.9 * TR * SR + 0.1;
+				Tf = CF * Wm * Wm;
+				Fm = eff * TR * Tf / r / tau;
+				console.log(SR.toFixed(1) + ", " + CF.toFixed(1) + ", " + Tf.toFixed(1) + " Nm, " );
+			}
+
+			*/
+			
+			am = (Tm - Tf) / Jm;
+			Fm = Math.min(Fm, Fl + Fr);
 			a = (Fm - Fr) / m;
 		} else {
 			Fm = Math.min(Tm / r / tau, Fl + Fr);
@@ -101,6 +112,7 @@ var physics = {
 		Wm = Wm + am * dt;
 		rpm = Wm * 60 / 6.28;
 		v = v + a * dt;
+
 		if (v * tires.speed < 0)
 			v = 0;
 		Wr = v / r / tau;
@@ -109,6 +121,8 @@ var physics = {
 			Wm = Wr;
 			clutch.engaged = true;
 		}
+
+		v = Math.abs(v) < 0.05 ? 0 : v;
 
 		engine.rpm = rpm;
 		vehicle.speed = v;
@@ -143,7 +157,7 @@ var road = {
 };
 
 var COMPILED = {
-	DATE: "Mar. 31 2020",
-	VER: "0.3.30",
-	CHANGELOG: "Physics, UI, new cars"
+	DATE: "Apr. 3, 2020",
+	VER: "0.3.35",
+	CHANGELOG: "Tires, transmissions, clusters, cars"
 }

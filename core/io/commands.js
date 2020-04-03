@@ -140,7 +140,7 @@ var keyboard = {
 					pedals.push(2);
 					break;
 				// Transmission
-				case 84: // T
+				case 77: // M
 					transmission.toggle();
 					break;
 				// Display

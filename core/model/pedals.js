@@ -1,6 +1,7 @@
 var pedals = {
 	brake: 0,
 	throttle: 0,
+	inertia: 0.2,
 	target: {
 		brake: 0,
 		throttle: 0
@@ -28,8 +29,10 @@ var pedals = {
 		}
 	}, update: function () {
 		var dt = time.dt;
-		var J = 0.2;
-		pedals.throttle = pedals.throttle + Math.sign(pedals.target.throttle - pedals.throttle) * dt / J;
+		var J = pedals.inertia;
+		pedals.throttle = pedals.throttle + Math.sign(
+			(pedals.wait.throttle ? 0 : pedals.target.throttle)
+			 - pedals.throttle) * dt / J;
 		pedals.brake = pedals.brake + Math.sign(pedals.target.brake - pedals.brake) * dt / J;
 		if (Math.abs(pedals.throttle - pedals.target.throttle) < 0.05)
 			pedals.throttle = pedals.target.throttle;
@@ -39,7 +42,7 @@ var pedals = {
 	}, check: function () {
 		pedals.throttle = Math.max(0, pedals.throttle);
 		pedals.brake = Math.max(0, pedals.brake);
-		pedals.throttle = Math.min(pedals.wait.throttle ? 0 : 1, pedals.throttle);
+		pedals.throttle = Math.min(1, pedals.throttle);
 		pedals.brake = Math.min(1, pedals.brake);
 	}
 };
