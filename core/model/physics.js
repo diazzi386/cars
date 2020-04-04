@@ -66,6 +66,11 @@ var physics = {
 		Fr = Math.sign(v) * Math.abs(Fr);
 
 		Tm = engine.torque();
+
+		// Controllo trazione
+		if (transmission.launch && transmission.gear != 0) {
+			Tm = Math.min(Tm, (0.9 + 0.2 * Math.random()) * (Fl + Fr)*r*Math.abs(tau));
+		}
 		
 		if (!clutch.engaged) {
 			
@@ -129,16 +134,7 @@ var physics = {
 		vehicle.acceleration = a;
 		vehicle.distance += v * dt;
 		
-		if (!time.chrono.ABORTED) {
-			if (!time.chrono.TIME_0100 && v > 100/3.6)
-				time.chrono.TIME_0100 = time.chrono.stop();
-			if (!time.chrono.TIME_0200 && v > 200/3.6)
-				time.chrono.TIME_0200 = time.chrono.stop();
-			if (!time.chrono.TIME_400M && vehicle.distance > 400)
-				time.chrono.TIME_400M = time.chrono.stop();
-			if (time.chrono.TIME_0100 && time.chrono.TIME_0200 && time.chrono.TIME_400M)
-				time.chrono.abort();
-		}
+		time.chrono.check();
 	}
 };
 
@@ -157,7 +153,7 @@ var road = {
 };
 
 var COMPILED = {
-	DATE: "Apr. 3, 2020",
-	VER: "0.3.35",
+	DATE: "Apr. 4, 2020",
+	VER: "0.3.40",
 	CHANGELOG: "Tires, transmissions, clusters, cars"
-}
+};

@@ -13,7 +13,7 @@ var tires = {
 
 		car.tires = TIRES;
 
-		if (car.TIRES.includes("Z"))
+		if (car.TIRES.includes("Z") || car.TIRES.includes("V"))
 			tires.mu = 1.1;
 		else
 			tires.mu = 0.9;

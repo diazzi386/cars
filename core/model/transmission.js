@@ -10,14 +10,15 @@ var transmission = {
 	tables: {
 		start: function () {
 			var diesel = (info.engine.fuel() == 'Diesel');
-			var max = car.engine.rpm[car.engine.rpm.length-1];
 			if (!transmission.launch)
 				return 0;
 			else {
 				if (diesel)
 					return 2500;
 				else {
-					if (max > 7000)
+					if (engine.max > 8500)
+						return 6000;
+					else if (engine.max > 7000)
 						return 5000;
 					else
 						return 4000;
@@ -25,15 +26,14 @@ var transmission = {
 			}
 		}, up: function () {
 			var diesel = (info.engine.fuel() == 'Diesel');
-			var max = car.engine.rpm[car.engine.rpm.length-1];
-			if (diesel && max > 5200)
+			if (diesel && engine.max > 5200)
 				table = [3000, 3000, 4000, 5200];
 			else if (diesel)
 				table = [3000, 3000, 4000, 4800];
-			else if (max > 7000)
-				table = [4000, 5000, 6000, max - 300];
+			else if (engine.max > 7000)
+				table = [4000, 5000, 6000, engine.max - 300];
 			else
-				table = [3000, 4000, 5000, max - 300];
+				table = [3000, 4000, 5000, engine.max - 300];
 
 			var index = 0;
 
@@ -49,11 +49,10 @@ var transmission = {
 			return table[index];
 		}, kickdown: function () {
 			var diesel = (info.engine.fuel() == 'Diesel');
-			var max = car.engine.rpm[car.engine.rpm.length-1];
 			if (pedals.throttle == 1) {
 				if (diesel)
 					return 2000;
-				else if (max > 7000)
+				else if (engine.max > 7000)
 					return 4000;
 				else
 					return 3000;
@@ -63,10 +62,9 @@ var transmission = {
 			//	return 0;
 		}, down: function () {
 			var diesel = (info.engine.fuel() == 'Diesel');
-			var max = car.engine.rpm[car.engine.rpm.length-1];
 			if (diesel)
 				table = [1500, 1500, 2000, 2500];
-			else if (max > 7000)
+			else if (engine.max > 7000)
 				table = [2000, 2500, 3000, 3500];
 			else
 				table = [2500, 3000, 3500, 4000];
@@ -112,7 +110,7 @@ var transmission = {
 			return transmission.shift(transmission.gear - 1);
 		else if (g == '-' && transmission.gear == 0)
 			return transmission.shift(-1);
-		else if (g == -1 && transmission.gear == 0) {
+		else if (g == -1 && transmission.gear == 0 && vehicle.speed == 0) {
 			transmission.direction = "R-S";
 			clutch.release();
 			transmission.gear = -1;
@@ -170,7 +168,7 @@ var transmission = {
 			if (engine.rpm >= transmission.regime('+') && !pedals.target.brake && pedals.target.throttle)
 				return transmission.upshift();
 		} else if (!clutch.engaged) {
-			if (vehicle.speed < 7 && (!pedals.target.throttle || pedals.target.brake))
+			if (Math.abs(vehicle.speed) < 15/3.6 && (!pedals.target.throttle || pedals.target.brake))
 				return transmission.shift(0);
 		} else if (transmission.gear > 0) {
 			if (engine.rpm < transmission.regime('-'))
@@ -180,29 +178,29 @@ var transmission = {
 		}
 	}, regime: function (m) {
 		var diesel = (info.engine.fuel() == 'Diesel');
-		var max = car.engine.rpm[car.engine.rpm.length-1];
 		var zero = car.engine.rpm[0];
 
 		if (m == 'max')
-			return max;
+			return engine.max;
 		else if (m == 'min')
 			return zero;
 		else if (m == '+') {
-			if (transmission.gear == 0) {
+			if (transmission.gear == 0)
 				return transmission.tables.start();			
-			} else {
+			else
 				return transmission.tables.up();
-			}
 		} else if (m == '-') {
 			if (transmission.gear == 0)
 				return 0;
 			else if (pedals.target.throttle && transmission.gear == 1)
 				return 0;
-			else if (pedals.target.throttle && transmission.gear > 2) {
+			else if (pedals.target.throttle && transmission.gear > 2)
 				return transmission.tables.kickdown();
-			} else if (!pedals.target.throttle) {
+			else if (!pedals.target.throttle)
 				return transmission.tables.down();	
-			} else
+			else if (pedals.target.brake)
+				return transmission.tables.down();	
+			else
 				return 0;
 		}
 	}, time: function () {

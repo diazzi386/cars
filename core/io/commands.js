@@ -113,16 +113,10 @@ var keyboard = {
 					break;
 				// GEARS
 				case 13:
-					if (transmission.automatic)
-						return;
-					else
-						transmission.upshift();
+					transmission.upshift();
 					break;
 				case 8:
-					if (transmission.automatic)
-						return;
-					else
-						transmission.downshift();
+					transmission.downshift();
 					break;
 				default:
 					break;

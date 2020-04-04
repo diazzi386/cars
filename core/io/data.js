@@ -7,7 +7,7 @@ var data = {
 				return window.location.replace("?" + defaultCar);
 
 			brand = location.split('/')[0].replace(/_/g, " ");
-			serie = location.split('/')[1];
+			serie = location.split('/')[1].replace(/_/g, " ");
 			year = location.split('/')[2];
 			model = year + " " + location.split('/')[3].replace(/_/g, " ");
 			
@@ -21,7 +21,7 @@ var data = {
 		var location = window.location.href.split('?')[1];
 
 		brand = location.split('/')[0].replace(/_/g, " ");
-		serie = location.split('/')[1];
+		serie = location.split('/')[1].replace(/_/g, " ");
 		year = location.split('/')[2];
 		model = year + " " + location.split('/')[3].replace(/_/g, " ");
 		

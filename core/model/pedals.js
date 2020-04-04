@@ -43,6 +43,7 @@ var pedals = {
 		pedals.throttle = Math.max(0, pedals.throttle);
 		pedals.brake = Math.max(0, pedals.brake);
 		pedals.throttle = Math.min(1, pedals.throttle);
+		// pedals.throttle = Math.min(pedals.wait.throttle ? 0 : 1, pedals.throttle);
 		pedals.brake = Math.min(1, pedals.brake);
 	}
 };

@@ -126,7 +126,7 @@ var ui = {
 				+ "<div><span>Speed</span><span>" + (50*Math.round(engine.rpm/50)) + " 1⁄min</span></div>"
 				+ "<div><span>Power</span><span>" + engine.power().toFixed() + " HP</span></div>"
 				+ "<div><span>Torque</span><span>" + engine.torque().toFixed() + " Nm</span></div>"
-				+ "<div><span>Airflow</span><span>" + engine.airflow.toFixed(2) + "</span></div>"
+				+ "<div><span>Air flow</span><span>" + engine.airflow.toFixed(2) + "</span></div>"
 				+ "<div><span>Injection</span><span>" + engine.injection.toFixed(2) + "</span></div>"
 				+ "<div><span>Starting</span><span>" + engine.startup + "</span></div>"
 				+ "<div><span>Inertia</span><span>" + (car.engine.J.toFixed(2)) + " kg m²</span></div>"

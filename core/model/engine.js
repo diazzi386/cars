@@ -42,7 +42,7 @@ var engine = {
 
 		if (x > 1)
 			engine.cutoff();
-		else if (transmission.gear == 0 && engine.rpm >= transmission.regime('+') && transmission.launch && pedals.brake)
+		else if (transmission.gear == 0 && engine.rpm >= transmission.regime('+') && transmission.launch)
 			engine.cutoff();
 		
 		if (engine.startup && engine.rpm >= engine.startupRegime)

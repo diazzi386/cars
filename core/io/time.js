@@ -34,6 +34,17 @@ var time = {
 			return 0.001 * (new Date().getTime() - time.chrono.STAMP);
 		}, abort: function () {
 			time.chrono.ABORTED = true;
+		}, check: function () {
+			if (!time.chrono.ABORTED) {
+				if (!time.chrono.TIME_0100 && vehicle.speed > 100/3.6)
+					time.chrono.TIME_0100 = time.chrono.stop();
+				if (!time.chrono.TIME_0200 && vehicle.speed > 200/3.6)
+					time.chrono.TIME_0200 = time.chrono.stop();
+				if (!time.chrono.TIME_400M && vehicle.distance > 400)
+					time.chrono.TIME_400M = time.chrono.stop();
+				if (time.chrono.TIME_0100 && time.chrono.TIME_0200 && time.chrono.TIME_400M)
+					time.chrono.abort();
+			}
 		}
 	}
 };
