@@ -1,0 +1,115 @@
+
+	*****  ***        ****   ***
+	  *   *   *       *   * *   *
+	  *   *   *  ***  *   * *   *
+	  *    ***        ****   ***
+	
+	CARS
+	Simulator by @luca.diazzi
+
+CHANGELOG
+Versions and changes
+
+0.1.0	Draft
+0.1.1	Added cars
+0.1.2	Transmission tables
+0.1.4	Major changes, thermal and electric engine
+0.1.10	Major revision, cleaned up interface and loading files
+0.2.0	Deleted electronics control and revised hybrids
+0.2.1	Removed pedals.pressure, pedals.set, better engine model, better clutch
+0.4.0	Revised transmission, new skin
+0.5.0	Files to choose from, transmission, etc.
+0.6.0	Complete revision of car model files and simplification
+
+FEATURES
+To add
+
+[X] Better engine model
+	[X] Better calculations for engine inertia
+	[X] Torque RPM and cap instead of linear ...
+	[X] Turbo/natural
+	[ ] Better partialised curves
+[X] Downforce and Cl
+[X]	Data
+[ ]	Wheel spin
+[ ] Antilock braking system (max -1.0 g deceleration)
+[ ] Turbolag
+[X] Launch control
+
+BUGS
+To solve
+
+CARS
+To include
+
+[ ] Hot Hatches
+		VW Golf GTI, GTD; Polo R, G40
+		Mini Cooper S, JCW
+		Honda Civic
+		Suzuki Swift
+		Subaru Impreza
+		MG Rover, ZR
+		Opel Corsa OPC, Kadett
+		Hyundai I30N
+		Kia ProCeed GTD
+		Toyota Yaris GR
+		Mazda Mazdaspeed 3
+[ ] Super Mini
+		Peugeot 106
+		Fiat Seicento Sporting, 500
+		Citroen Saxo
+[ ] Sportscars
+		Alfa 4C, 8C
+		Audi TT
+		BMW Z4, Z8
+		Honda S2000
+		Mazda MX5
+		Abarth 124
+		BMW 2002 turbo, M2, M3, M4, M5
+		Mini Cooper
+		Toyota GT86
+		Subaru BRZ
+		Ford Mustang
+		Porsche Cayman, Boxster
+[ ] Supercars
+		Honda NSX
+		Audi R8
+		Bugatti Veyron
+		Pagani Zonda
+		Nissan GTR
+		Porsche 911
+		Porsche Carrera GT
+[ ] Autobahn Cruisers
+		Audi RS4, RS6
+		BMW 3, 5 Touring
+		Skoda Superb
+		Mercedes C, E
+		Volvo V60, V90, 850
+		Porsche Panamera
+		Ferrari FF
+[ ] Luxury Limousines
+		Audi A8
+		BMW Serie 7
+		Mercedes S
+		Bentley Continental
+		Porsche Panamera
+		Lexus LS
+[ ] Supersize SUV
+		Porsche Cayenne
+		BMW X5 X6
+		Audi Q5 Q7
+		Mercedes G
+		Land Rover Discovery
+		Suzuki Jimmy
+[ ] People Favourites
+[ ] Hybrids
+[ ] Electric
+
+[ ] Sport
+	[ ] F1
+	[ ] Rally Legends
+	
+[ ] Regional
+	[ ] American Muscles
+	[ ] Bavarian Classics
+	[ ] Italian Icons
